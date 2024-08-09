@@ -31,7 +31,7 @@ namespace Roommates
                         {
                             Console.WriteLine($"{r.Name} has an Id of {r.Id} and a max occupancy of {r.MaxOccupancy}");
                         }
-                        Console.Write("Press any key to continue");
+                        Console.Write("\nPress any key to continue");
                         Console.ReadKey();
                         break;
 
@@ -42,7 +42,7 @@ namespace Roommates
                         Room room = roomRepo.GetById(id);
 
                         Console.WriteLine($"{room.Id} - {room.Name} Max Occupancy({room.MaxOccupancy})");
-                        Console.Write("Press any key to continue");
+                        Console.Write("\nPress any key to continue");
                         Console.ReadKey();
                         break;
 
@@ -62,17 +62,17 @@ namespace Roommates
                         roomRepo.Insert(roomToAdd);
 
                         Console.WriteLine($"{roomToAdd.Name} has been added and assigned an Id of {roomToAdd.Id}");
-                        Console.Write("Press any key to continue");
+                        Console.Write("\nPress any key to continue");
                         Console.ReadKey();
                         break;
 
-                    case ("View all chores"):
+                    case ("Show all chores"):
                         List<Chore> chores = choreRepo.GetAll();
                         foreach (Chore c in chores)
                         {
                             Console.WriteLine($"{c.Name} -- has an Id of {c.Id}");
                         }
-                        Console.Write("Press any key to continue");
+                        Console.Write("\nPress any key to continue");
                         Console.ReadKey();
                         break;
 
@@ -83,7 +83,7 @@ namespace Roommates
                         Chore selectedChore = choreRepo.GetById(choreId);
                         Console.WriteLine($"Chore Id {selectedChore.Id} -- {selectedChore.Name}");
 
-                        Console.WriteLine("Press any key to continue");
+                        Console.WriteLine("\nPress any key to continue");
                         Console.ReadKey();
                         break;
 
@@ -100,7 +100,7 @@ namespace Roommates
 
                         Console.WriteLine($"{choreToAdd.Name} has been added to the list of chores.");
 
-                        Console.WriteLine("Press any key to continue");
+                        Console.WriteLine("\nPress any key to continue");
                         Console.ReadKey();
                         break;
 
@@ -111,7 +111,21 @@ namespace Roommates
                         Roommate selectedRoommate = roommateRepo.GetById(roommateId);
                         Console.WriteLine($"{selectedRoommate.FirstName} -- Paying ${selectedRoommate.RentPortion} rent portion -- Currently occupying {selectedRoommate.Room.Name}");
 
-                        Console.WriteLine("Press any key to continue");
+                        Console.WriteLine("\nPress any key to continue");
+                        Console.ReadKey();
+                        break;
+
+                    case ("View unassigned chores"):
+                        List<Chore> unassignedChore = choreRepo.GetUnassignedChores();
+
+                        Console.WriteLine("\t\tUnassigned Chores\n");
+
+                        foreach (Chore uc in unassignedChore)
+                        {
+                            Console.WriteLine($"{uc.Name}");
+                        }
+
+                        Console.WriteLine("\nPress any key to continue");
                         Console.ReadKey();
                         break;
 
@@ -129,12 +143,13 @@ namespace Roommates
             List<string> options = new List<string>()
             {
                 "Show all rooms",
+                "Show all chores",
+                "View unassigned chores",
                 "Search for room",
-                "Add a room",
-                "View all chores",
                 "Search for a chore",
-                "Add a chore",
                 "Search for a roommate",
+                "Add a room",
+                "Add a chore",
                 "Exit"
             };
 
