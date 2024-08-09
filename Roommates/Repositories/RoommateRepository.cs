@@ -51,6 +51,62 @@ namespace Roommates.Repositories
         }
 
 
+        public List<Roommate> GetAll()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT Id, FirstName, LastName, RentPortion, MoveInDate, RoomId
+                                        FROM Roommate;"; // @ is used for multi-line format (readability purposes)
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Roommate> roommates = new List<Roommate>();
+
+                    while (reader.Read())
+                    {
+                        int idColumnPosition = reader.GetOrdinal("Id");
+                        int idValue = reader.GetInt32(idColumnPosition);
+
+                        int firstNameColumnPosition = reader.GetOrdinal("FirstName");
+                        string firstNameValue = reader.GetString(firstNameColumnPosition);
+                        
+                        int lastNameColumnPosition = reader.GetOrdinal("LastName");
+                        string lastNameValue = reader.GetString(lastNameColumnPosition);
+
+                        int rentColumnPosition = reader.GetOrdinal("RentPortion");
+                        int rentValue = reader.GetInt32(rentColumnPosition);
+
+                        int moveInDateColumnPosition = reader.GetOrdinal("MoveInDate");
+                        DateTime moveInDateValue = reader.GetDateTime(moveInDateColumnPosition);
+
+                        int roomIdColumnPosition = reader.GetOrdinal("RoomId");
+                        Room roomIdValue = null;
+
+                        Roommate roommate = new Roommate()
+                        {
+                            Id = idValue,
+                            FirstName = firstNameValue,
+                            LastName = lastNameValue,
+                            RentPortion = rentValue,
+                            MoveInDate = moveInDateValue,
+                            Room = roomIdValue,
+                        };
+                        // Add the object to the list
+                        roommates.Add(roommate);
+                    }
+                    // Close the connection
+                    reader.Close();
+
+                    // Return the roommates list once all objects are added
+                    return roommates;
+                }
+            }
+        }
+
+
 
 
     }

@@ -129,6 +129,20 @@ namespace Roommates
                         Console.ReadKey();
                         break;
 
+                    case ("Show all roommates"):
+                        List<Roommate> allRoommates = roommateRepo.GetAll();
+
+                        Console.WriteLine("\t\tAll Roommates\n");
+
+                        foreach (Roommate rm in allRoommates)
+                        {
+                            Console.WriteLine($"Id: {rm.Id} -- {rm.FirstName} {rm.LastName} -- Rent Portion: ${rm.RentPortion} -- Moved In: {rm.MoveInDate.ToShortDateString()}");
+                        }
+
+                        Console.WriteLine("\nPress any key to continue");
+                        Console.ReadKey();
+                        break;
+
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -143,6 +157,7 @@ namespace Roommates
             List<string> options = new List<string>()
             {
                 "Show all rooms",
+                "Show all roommates",
                 "Show all chores",
                 "View unassigned chores",
                 "Search for room",
