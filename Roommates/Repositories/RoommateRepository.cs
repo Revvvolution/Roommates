@@ -107,6 +107,49 @@ namespace Roommates.Repositories
         }
 
 
+        public List<Roommate> GetRoommatesByRoomId(int roomId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using SqlCommand cmd = conn.CreateCommand();
+                {
+                    cmd.CommandText = @"SELECT r.Id AS 'Room Id', r.Name, r.MaxOccupancy, rm.Id, rm.FirstName, rm.LastName, rm.RentPortion, rm.MoveInDate
+                                        FROM Roommate rm
+                                        LEFT JOIN Room r
+                                        ON rm.RoomId = r.Id
+                                        WHERE r.Id = @id;";
+                    cmd.Parameters.AddWithValue("@id", roomId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Roommate> roommatesInRoom = new List<Roommate>();
+
+                    while (reader.Read())
+                    {
+                        Roommate roommate = new Roommate()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            RentPortion = reader.GetInt32(reader.GetOrdinal("RentPortion")),
+                            MoveInDate = reader.GetDateTime(reader.GetOrdinal("MoveInDate")),
+                            Room = new Room()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Room Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                MaxOccupancy = reader.GetInt32(reader.GetOrdinal("MaxOccupancy"))
+                            }
+                        };
+                        roommatesInRoom.Add(roommate);
+                    }
+
+                    reader.Close();
+
+                    return roommatesInRoom;
+                }
+            }
+        }
+
 
 
     }

@@ -81,11 +81,22 @@ namespace Roommates
                         int choreId = int.Parse(Console.ReadLine());
 
                         Chore selectedChore = choreRepo.GetById(choreId);
-                        Console.WriteLine($"Chore Id {selectedChore.Id} -- {selectedChore.Name}");
 
-                        Console.WriteLine("\nPress any key to continue");
-                        Console.ReadKey();
-                        break;
+                        try
+                        {
+                            Console.WriteLine($"Chore Id {selectedChore.Id} -- {selectedChore.Name}");
+
+                            Console.WriteLine("\nPress any key to continue");
+                            Console.ReadKey();
+                            break;
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine("\nNo chore is associated with this Id.");
+                            Console.WriteLine("\nPress any key to continue");
+                            Console.ReadKey();
+                            break;
+                        }
 
                     case ("Add a chore"):
                         Console.Write("Chore name: ");
@@ -108,12 +119,22 @@ namespace Roommates
                         Console.Write("Roommate Id: ");
                         int roommateId = int.Parse(Console.ReadLine());
 
-                        Roommate selectedRoommate = roommateRepo.GetById(roommateId);
-                        Console.WriteLine($"{selectedRoommate.FirstName} -- Paying ${selectedRoommate.RentPortion} rent portion -- Currently occupying {selectedRoommate.Room.Name}");
+                        try
+                        {
+                            Roommate selectedRoommate = roommateRepo.GetById(roommateId);
+                            Console.WriteLine($"{selectedRoommate.FirstName} -- Paying ${selectedRoommate.RentPortion} rent portion -- Currently occupying {selectedRoommate.Room.Name}");
 
-                        Console.WriteLine("\nPress any key to continue");
-                        Console.ReadKey();
-                        break;
+                            Console.WriteLine("\nPress any key to continue");
+                            Console.ReadKey();
+                            break;
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine("\nNo roommate is associated with this Id.");
+                            Console.WriteLine("\nPress any key to continue");
+                            Console.ReadKey();
+                            break;
+                        }
 
                     case ("View unassigned chores"):
                         List<Chore> unassignedChore = choreRepo.GetUnassignedChores();
@@ -143,6 +164,33 @@ namespace Roommates
                         Console.ReadKey();
                         break;
 
+                    case ("Find roommates by room Id"):
+                        Console.Write("\t\tFind roommates by room Id\nRoom Id: ");
+                        int roomId = int.Parse(Console.ReadLine());
+
+                        List<Roommate> selectedRoom = roommateRepo.GetRoommatesByRoomId(roomId);
+
+                        try
+                        {
+                            Console.WriteLine($"Currently occupying {selectedRoom[0].Room.Name}: \n");
+
+                            foreach (Roommate rm in selectedRoom)
+                            {
+                                Console.WriteLine($"{rm.FirstName} {rm.LastName} -- Paying ${rm.RentPortion} rent portion -- Moved In: {rm.MoveInDate.ToShortDateString()}");
+                            }
+
+                            Console.WriteLine("\nPress any key to continue");
+                            Console.ReadKey();
+                            break;
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            Console.WriteLine("\nNo roommates found occupying this room.");
+                            Console.WriteLine("\nPress any key to continue");
+                            Console.ReadKey();
+                            break;
+                        }
+
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -163,6 +211,7 @@ namespace Roommates
                 "Search for room",
                 "Search for a chore",
                 "Search for a roommate",
+                "Find roommates by room Id",
                 "Add a room",
                 "Add a chore",
                 "Exit"
