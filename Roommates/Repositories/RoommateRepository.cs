@@ -2,6 +2,7 @@
 using Roommates.Models;
 using System.Collections.Generic;
 
+
 namespace Roommates.Repositories
 {
     public class RoommateRepository : BaseRepository
@@ -146,6 +147,31 @@ namespace Roommates.Repositories
                     reader.Close();
 
                     return roommatesInRoom;
+                }
+            }
+        }
+
+
+        public void Insert(Roommate roommate, int roomId)
+        {
+
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Roommate (FirstName, LastName, RentPortion, MoveInDate, RoomId)
+                                       OUTPUT INSERTED.Id
+                                       VALUES (@fname, @lname, @rent, @moveInDate, @rmId)";
+                    cmd.Parameters.AddWithValue("@fname", roommate.FirstName);
+                    cmd.Parameters.AddWithValue("@lname", roommate.LastName);
+                    cmd.Parameters.AddWithValue("@rent", roommate.RentPortion);
+                    cmd.Parameters.AddWithValue("@moveInDate", roommate.MoveInDate);
+                    cmd.Parameters.AddWithValue("@rmId", roomId);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    roommate.Id = id;
                 }
             }
         }

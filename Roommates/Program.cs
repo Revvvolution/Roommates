@@ -191,6 +191,39 @@ namespace Roommates
                             break;
                         }
 
+                    case ("Add a roommate"):
+                        Console.Write("Enter First Name: ");
+                        string rmFirstName = Console.ReadLine();
+
+                        Console.Write("Enter Last Name: ");
+                        string rmLastName = Console.ReadLine();
+
+                        Console.Write("Enter Rent Portion amount: $");
+                        int rmRent = int.Parse(Console.ReadLine());
+
+                        Console.Write("Move In Date (YYYY-MM-DD):");
+                        DateTime rmMoveInDate = DateTime.Parse(Console.ReadLine());
+
+                        Console.Write("Room Id for roommate: ");
+                        int rmRoomId = int.Parse(Console.ReadLine());
+
+
+                        Roommate roommateToAdd = new Roommate()
+                        {
+                            FirstName = rmFirstName,
+                            LastName = rmLastName,
+                            RentPortion = rmRent,
+                            MoveInDate = rmMoveInDate,
+                        };
+
+                        roommateRepo.Insert(roommateToAdd, rmRoomId);
+
+                        Console.WriteLine($"\t\n{roommateToAdd.FirstName} {roommateToAdd.LastName} has been added to the list of roommates with an Id of {roommateToAdd.Id}.");
+
+                        Console.WriteLine("\nPress any key to continue");
+                        Console.ReadKey();
+                        break;
+
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -214,6 +247,7 @@ namespace Roommates
                 "Find roommates by room Id",
                 "Add a room",
                 "Add a chore",
+                "Add a roommate",
                 "Exit"
             };
 
